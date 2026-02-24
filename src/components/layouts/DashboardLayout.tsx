@@ -11,6 +11,7 @@ import {
   LogOut, User, ChevronDown, Globe, CalendarDays, Search, Bell, Route,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import MobileBottomNav from './MobileBottomNav';
 
 interface NavItem {
   label: string;
@@ -95,62 +96,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-            <motion.aside
-              initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-64 gradient-sidebar z-50 lg:hidden flex flex-col"
-            >
-              <div className="p-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center">
-                    <Compass className="w-5 h-5 text-accent-foreground" />
-                  </div>
-                  <span className="text-lg font-display font-bold text-sidebar-foreground">RouteAura</span>
-                </div>
-                <button onClick={() => setSidebarOpen(false)} className="text-sidebar-foreground/70">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <nav className="flex-1 px-3 space-y-1">
-                {navItems.map(item => (
-                  <Link
-                    key={item.href} to={item.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all',
-                      isActive(item.href)
-                        ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                        : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
-                    )}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-
       {/* Main Content */}
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
         {/* Top Navbar */}
         <header className="sticky top-0 z-20 glass border-b border-border/50">
-          <div className="flex items-center justify-between h-16 px-4 lg:px-8">
-            <div className="flex items-center gap-4">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-foreground">
-                <Menu className="w-6 h-6" />
-              </button>
+          <div className="flex items-center justify-between h-14 sm:h-16 px-4 lg:px-8">
+            <div className="flex items-center gap-3">
+              {/* Mobile logo */}
+              <Link to={user?.role === 'admin' ? '/admin' : '/dashboard'} className="flex lg:hidden items-center gap-2">
+                <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
+                  <Compass className="w-4 h-4 text-accent-foreground" />
+                </div>
+                <span className="text-base font-display font-bold text-foreground">RouteAura</span>
+              </Link>
               <div className="hidden sm:flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
                 <Search className="w-4 h-4 text-muted-foreground" />
                 <input
@@ -159,19 +117,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="relative">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Button variant="ghost" size="icon" className="relative w-9 h-9">
                 <Bell className="w-5 h-5 text-muted-foreground" />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full" />
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="gap-2">
+                  <Button variant="ghost" className="gap-2 px-2 sm:px-3">
                     <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-sm font-semibold text-primary-foreground">
                       {user?.name?.charAt(0)}
                     </div>
                     <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
-                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                    <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -198,6 +156,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </motion.div>
         </main>
       </div>
+
+      {/* Mobile Bottom Pill Nav */}
+      <MobileBottomNav />
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function ClientProfile() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl space-y-6">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl space-y-6 pb-24 lg:pb-0">
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Profile</h1>
         <p className="text-sm text-muted-foreground mt-1">Manage your account information</p>

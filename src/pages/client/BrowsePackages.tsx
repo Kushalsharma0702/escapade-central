@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { travelPackages } from '@/data/mockData';
+import { travelPackages, formatINR } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,9 +26,9 @@ export default function BrowsePackages() {
       p.destination.toLowerCase().includes(search.toLowerCase()) ||
       p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
     const matchBudget = budgetFilter === 'all' ||
-      (budgetFilter === 'low' && p.price < 1500) ||
-      (budgetFilter === 'mid' && p.price >= 1500 && p.price < 2500) ||
-      (budgetFilter === 'high' && p.price >= 2500);
+      (budgetFilter === 'low' && p.price < 20000) ||
+      (budgetFilter === 'mid' && p.price >= 20000 && p.price < 35000) ||
+      (budgetFilter === 'high' && p.price >= 35000);
     const matchDuration = durationFilter === 'all' ||
       (durationFilter === 'short' && p.duration <= 5) ||
       (durationFilter === 'medium' && p.duration > 5 && p.duration <= 8) ||
@@ -46,7 +46,7 @@ export default function BrowsePackages() {
   const detailPackage = travelPackages.find(p => p.id === detailPkg);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Browse Packages</h1>
         <p className="text-sm text-muted-foreground mt-1">Discover your next adventure</p>
@@ -62,9 +62,9 @@ export default function BrowsePackages() {
           <SelectTrigger className="w-40"><SelectValue placeholder="Budget" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Budgets</SelectItem>
-            <SelectItem value="low">Under $1,500</SelectItem>
-            <SelectItem value="mid">$1,500 - $2,500</SelectItem>
-            <SelectItem value="high">$2,500+</SelectItem>
+            <SelectItem value="low">Under ₹20,000</SelectItem>
+            <SelectItem value="mid">₹20,000 - ₹35,000</SelectItem>
+            <SelectItem value="high">₹35,000+</SelectItem>
           </SelectContent>
         </Select>
         <Select value={durationFilter} onValueChange={setDurationFilter}>
@@ -114,7 +114,7 @@ export default function BrowsePackages() {
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-border/30">
                 <div>
-                  <span className="text-xl font-display font-bold text-primary">${pkg.price}</span>
+                  <span className="text-xl font-display font-bold text-primary">{formatINR(pkg.price)}</span>
                   <span className="text-xs text-muted-foreground">/person</span>
                 </div>
                 <Button className="gradient-primary text-primary-foreground" onClick={() => setBookingPkg(pkg.id)}>
@@ -144,7 +144,7 @@ export default function BrowsePackages() {
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div><span className="text-muted-foreground">Destination:</span> <span className="font-medium text-card-foreground">{detailPackage.destination}</span></div>
                 <div><span className="text-muted-foreground">Duration:</span> <span className="font-medium text-card-foreground">{detailPackage.duration} days</span></div>
-                <div><span className="text-muted-foreground">Price:</span> <span className="font-display font-bold text-primary">${detailPackage.price}/person</span></div>
+                <div><span className="text-muted-foreground">Price:</span> <span className="font-display font-bold text-primary">{formatINR(detailPackage.price)}/person</span></div>
                 <div><span className="text-muted-foreground">Seats:</span> <span className="font-medium text-card-foreground">{detailPackage.availableSeats}</span></div>
               </div>
               <Button className="w-full gradient-primary text-primary-foreground" onClick={() => { setDetailPkg(null); setBookingPkg(detailPackage.id); }}>
@@ -182,7 +182,7 @@ export default function BrowsePackages() {
             </div>
             <div className="bg-muted rounded-lg p-4 text-sm space-y-1">
               <div className="flex justify-between"><span className="text-muted-foreground">Package</span><span className="font-medium text-foreground">{selectedPkg?.title}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">Price/person</span><span className="font-medium text-foreground">${selectedPkg?.price}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Price/person</span><span className="font-medium text-foreground">{selectedPkg && formatINR(selectedPkg.price)}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">Travel Date</span><span className="font-medium text-foreground">{selectedPkg?.travelDate}</span></div>
             </div>
             <Button type="submit" className="w-full gradient-primary text-primary-foreground">Submit Booking</Button>

@@ -6,7 +6,7 @@ export default function ManageUsers() {
   const clients = demoUsers.filter(u => u.role === 'client');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Manage Users</h1>
         <p className="text-sm text-muted-foreground mt-1">{clients.length} registered clients</p>

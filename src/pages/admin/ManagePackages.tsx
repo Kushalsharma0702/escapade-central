@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { travelPackages, TravelPackage } from '@/data/mockData';
+import { travelPackages, TravelPackage, formatINR } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -60,7 +60,7 @@ export default function ManagePackages() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-bold text-foreground">Travel Packages</h1>
@@ -91,7 +91,7 @@ export default function ManagePackages() {
                   <Input name="category" defaultValue={editing?.category} required />
                 </div>
                 <div className="space-y-2">
-                  <Label>Price ($)</Label>
+                  <Label>Price (₹)</Label>
                   <Input name="price" type="number" defaultValue={editing?.price} required />
                 </div>
                 <div className="space-y-2">
@@ -146,13 +146,13 @@ export default function ManagePackages() {
                 </div>
               )}
             </div>
-            <div className="p-5 space-y-3">
+            <div className="p-4 sm:p-5 space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-semibold text-card-foreground">{pkg.title}</h3>
+                  <h3 className="font-semibold text-card-foreground text-sm sm:text-base">{pkg.title}</h3>
                   <p className="text-xs text-muted-foreground">{pkg.destination}</p>
                 </div>
-                <span className="text-lg font-display font-bold text-primary">${pkg.price}</span>
+                <span className="text-base sm:text-lg font-display font-bold text-primary">{formatINR(pkg.price)}</span>
               </div>
               <div className="flex flex-wrap gap-1">
                 {pkg.tags.map(tag => (
