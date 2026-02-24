@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 export default function ClientProfile() {
   const { user } = useAuth();
@@ -14,15 +15,15 @@ export default function ClientProfile() {
   };
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Profile</h1>
+        <h1 className="text-2xl font-display font-bold text-foreground">Profile</h1>
         <p className="text-sm text-muted-foreground mt-1">Manage your account information</p>
       </div>
 
       <Card className="shadow-card border-border/50">
         <CardHeader>
-          <CardTitle className="text-lg">Personal Information</CardTitle>
+          <CardTitle className="text-lg font-display">Personal Information</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSave} className="space-y-4">
@@ -57,6 +58,6 @@ export default function ClientProfile() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

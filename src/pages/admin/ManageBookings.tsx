@@ -5,6 +5,7 @@ import StatusBadge from '@/components/StatusBadge';
 import { Check, X, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 export default function ManageBookings() {
   const [allBookings, setAllBookings] = useState<Booking[]>(initialBookings);
@@ -19,12 +20,13 @@ export default function ManageBookings() {
     setAllBookings(prev => prev.map(b =>
       b.id === id ? { ...b, status, paymentStatus: status === 'approved' ? 'paid' as const : 'refunded' as const } : b
     ));
+    toast.success(`Booking ${status} successfully`);
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Manage Bookings</h1>
+        <h1 className="text-2xl font-display font-bold text-foreground">Manage Bookings</h1>
         <p className="text-sm text-muted-foreground mt-1">Approve or reject client booking requests</p>
       </div>
 
@@ -46,7 +48,8 @@ export default function ManageBookings() {
             </thead>
             <tbody>
               {filtered.map(b => (
-                <tr key={b.id} className="border-t border-border/30 hover:bg-muted/30 transition-colors">
+                <motion.tr key={b.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="border-t border-border/30 hover:bg-muted/30 transition-colors">
                   <td className="px-6 py-4">
                     <p className="text-sm font-medium text-card-foreground">{b.clientName}</p>
                     <p className="text-xs text-muted-foreground">{b.clientEmail}</p>
@@ -71,7 +74,7 @@ export default function ManageBookings() {
                       </div>
                     )}
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>

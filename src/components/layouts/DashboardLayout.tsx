@@ -7,8 +7,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Plane, LayoutDashboard, Package, BookOpen, Users, MapPin, Menu, X,
-  LogOut, User, ChevronDown, Globe, CalendarDays, Search,
+  Compass, LayoutDashboard, Package, BookOpen, Users, MapPin, Menu, X,
+  LogOut, User, ChevronDown, Globe, CalendarDays, Search, Bell, Route,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,6 +24,7 @@ const adminNav: NavItem[] = [
   { label: 'Bookings', href: '/admin/bookings', icon: BookOpen },
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Destinations', href: '/admin/destinations', icon: MapPin },
+  { label: 'Routes', href: '/admin/routes', icon: Route },
 ];
 
 const clientNav: NavItem[] = [
@@ -58,9 +59,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-6">
           <Link to={user?.role === 'admin' ? '/admin' : '/dashboard'} className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center">
-              <Plane className="w-5 h-5 text-accent-foreground" />
+              <Compass className="w-5 h-5 text-accent-foreground" />
             </div>
-            <span className="text-lg font-bold text-sidebar-foreground">TravelMate</span>
+            <span className="text-lg font-display font-bold text-sidebar-foreground">RouteAura</span>
           </Link>
         </div>
 
@@ -88,7 +89,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name}</p>
-              <p className="text-xs text-sidebar-muted truncate">{user?.role}</p>
+              <p className="text-xs text-sidebar-muted truncate capitalize">{user?.role}</p>
             </div>
           </div>
         </div>
@@ -111,9 +112,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="p-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center">
-                    <Plane className="w-5 h-5 text-accent-foreground" />
+                    <Compass className="w-5 h-5 text-accent-foreground" />
                   </div>
-                  <span className="text-lg font-bold text-sidebar-foreground">TravelMate</span>
+                  <span className="text-lg font-display font-bold text-sidebar-foreground">RouteAura</span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} className="text-sidebar-foreground/70">
                   <X className="w-5 h-5" />
@@ -158,30 +159,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
               </div>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-2">
-                  <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-sm font-semibold text-primary-foreground">
-                    {user?.name?.charAt(0)}
-                  </div>
-                  <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem className="text-xs text-muted-foreground">{user?.email}</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                  <LogOut className="w-4 h-4 mr-2" />Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="w-5 h-5 text-muted-foreground" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full" />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="gap-2">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-sm font-semibold text-primary-foreground">
+                      {user?.name?.charAt(0)}
+                    </div>
+                    <span className="hidden sm:inline text-sm font-medium">{user?.name}</span>
+                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="text-xs text-muted-foreground">{user?.email}</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <LogOut className="w-4 h-4 mr-2" />Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </header>
 
         {/* Page Content */}
         <main className="flex-1 p-4 lg:p-8">
-          {children}
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {children}
+          </motion.div>
         </main>
       </div>
     </div>

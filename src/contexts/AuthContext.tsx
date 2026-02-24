@@ -11,13 +11,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const DEMO_CREDENTIALS: Record<string, string> = {
-  'admin@travelmate.com': 'Admin@123',
-  'client@travelmate.com': 'Client@123',
+  'admin@routeaura.com': 'Admin@123',
+  'client@routeaura.com': 'Client@123',
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('travelmate_user');
+    const saved = localStorage.getItem('routeaura_user');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const foundUser = demoUsers.find(u => u.email === email);
       if (foundUser) {
         setUser(foundUser);
-        localStorage.setItem('travelmate_user', JSON.stringify(foundUser));
+        localStorage.setItem('routeaura_user', JSON.stringify(foundUser));
         return true;
       }
     }
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     setUser(null);
-    localStorage.removeItem('travelmate_user');
+    localStorage.removeItem('routeaura_user');
   }, []);
 
   return (

@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+        <h1 className="text-2xl font-display font-bold text-foreground">Admin Dashboard</h1>
         <p className="text-muted-foreground text-sm mt-1">Overview of your travel management system</p>
       </div>
 
@@ -25,25 +25,23 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Line Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="lg:col-span-2 bg-card rounded-xl border border-border/50 p-6 shadow-card">
-          <h3 className="text-base font-semibold text-card-foreground mb-4">Monthly Bookings</h3>
+          <h3 className="text-base font-display font-semibold text-card-foreground mb-4">Monthly Bookings</h3>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={monthlyBookingsData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210 20% 90%)" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="hsl(215 15% 50%)" />
-              <YAxis tick={{ fontSize: 12 }} stroke="hsl(215 15% 50%)" />
-              <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(210 20% 90%)', fontSize: '12px' }} />
-              <Line type="monotone" dataKey="bookings" stroke="hsl(210 80% 45%)" strokeWidth={2.5} dot={{ fill: 'hsl(210 80% 45%)', r: 4 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 90%)" />
+              <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" />
+              <YAxis tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" />
+              <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 14% 90%)', fontSize: '12px' }} />
+              <Line type="monotone" dataKey="bookings" stroke="hsl(239 84% 67%)" strokeWidth={2.5} dot={{ fill: 'hsl(239 84% 67%)', r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </motion.div>
 
-        {/* Pie Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="bg-card rounded-xl border border-border/50 p-6 shadow-card">
-          <h3 className="text-base font-semibold text-card-foreground mb-4">Destination Popularity</h3>
+          <h3 className="text-base font-display font-semibold text-card-foreground mb-4">Destination Popularity</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={destinationData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" paddingAngle={4}>
@@ -72,7 +70,7 @@ export default function AdminDashboard() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
         className="bg-card rounded-xl border border-border/50 shadow-card overflow-hidden">
         <div className="p-6 pb-4">
-          <h3 className="text-base font-semibold text-card-foreground">Recent Bookings</h3>
+          <h3 className="text-base font-display font-semibold text-card-foreground">Recent Bookings</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">

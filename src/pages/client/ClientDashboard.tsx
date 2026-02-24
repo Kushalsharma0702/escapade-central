@@ -14,7 +14,7 @@ export default function ClientDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Welcome back, {user?.name?.split(' ')[0]}!</h1>
+        <h1 className="text-2xl font-display font-bold text-foreground">Welcome back, {user?.name?.split(' ')[0]}!</h1>
         <p className="text-muted-foreground text-sm mt-1">Here's your travel overview</p>
       </div>
 
@@ -28,21 +28,22 @@ export default function ClientDashboard() {
       {/* Upcoming Trips */}
       {upcoming.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Upcoming Trips</h2>
+          <h2 className="text-lg font-display font-semibold text-foreground">Upcoming Trips</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {upcoming.map((b, i) => {
               const pkg = travelPackages.find(p => p.id === b.packageId);
               return (
                 <motion.div key={b.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
                   className="bg-card rounded-xl border border-border/50 shadow-card overflow-hidden flex">
                   <div className="w-32 h-full">
-                    <img src={pkg?.image} alt={b.packageName} className="w-full h-full object-cover" />
+                    <img src={pkg?.images[0]} alt={b.packageName} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 p-4">
                     <h3 className="font-semibold text-card-foreground">{b.packageName}</h3>
                     <p className="text-xs text-muted-foreground mt-1">📅 {b.travelDate} · 👥 {b.travelers} travelers</p>
                     <div className="flex items-center justify-between mt-3">
-                      <span className="text-sm font-bold text-primary">${b.totalAmount.toLocaleString()}</span>
+                      <span className="text-sm font-display font-bold text-primary">${b.totalAmount.toLocaleString()}</span>
                       <StatusBadge status={b.status} />
                     </div>
                   </div>
@@ -55,7 +56,7 @@ export default function ClientDashboard() {
 
       {/* All Bookings Summary */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Booking History</h2>
+        <h2 className="text-lg font-display font-semibold text-foreground">Booking History</h2>
         <div className="bg-card rounded-xl border border-border/50 shadow-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
