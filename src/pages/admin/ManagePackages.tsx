@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Pencil, Trash2, Search } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Plus, Pencil, Trash2, Search, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ImageGallery from '@/components/ImageGallery';
 
 export default function ManagePackages() {
   const [packages, setPackages] = useState<TravelPackage[]>(travelPackages);
@@ -15,11 +17,16 @@ export default function ManagePackages() {
 
   const filtered = packages.filter(p =>
     p.title.toLowerCase().includes(search.toLowerCase()) ||
-    p.destination.toLowerCase().includes(search.toLowerCase())
+    p.destination.toLowerCase().includes(search.toLowerCase()) ||
+    p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()))
   );
 
   const handleDelete = (id: string) => {
     setPackages(prev => prev.filter(p => p.id !== id));
+  };
+
+  const toggleVisibility = (id: string) => {
+    setPackages(prev => prev.map(p => p.id === id ? { ...p, visible: !p.visible } : p));
   };
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,10 +41,15 @@ export default function ManagePackages() {
       duration: Number(fd.get('duration')),
       availableSeats: Number(fd.get('seats')),
       travelDate: fd.get('travelDate') as string,
-      image: fd.get('image') as string || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
+      images: (fd.get('images') as string || '').split(',').map(s => s.trim()).filter(Boolean),
       rating: editing?.rating || 4.5,
       category: fd.get('category') as string || 'Beach',
+      tags: (fd.get('tags') as string || '').split(',').map(s => s.trim()).filter(Boolean),
+      visible: editing?.visible ?? true,
     };
+    if (pkg.images.length === 0) {
+      pkg.images = ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800'];
+    }
     if (editing) {
       setPackages(prev => prev.map(p => p.id === editing.id ? pkg : p));
     } else {
@@ -51,7 +63,7 @@ export default function ManagePackages() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Travel Packages</h1>
+          <h1 className="text-2xl font-display font-bold text-foreground">Travel Packages</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage your travel packages</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) setEditing(null); }}>
@@ -62,7 +74,7 @@ export default function ManagePackages() {
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>{editing ? 'Edit Package' : 'Add New Package'}</DialogTitle>
+              <DialogTitle className="font-display">{editing ? 'Edit Package' : 'Add New Package'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -95,8 +107,12 @@ export default function ManagePackages() {
                   <Input name="travelDate" type="date" defaultValue={editing?.travelDate} required />
                 </div>
                 <div className="space-y-2 col-span-2">
-                  <Label>Image URL</Label>
-                  <Input name="image" defaultValue={editing?.image} placeholder="https://..." />
+                  <Label>Image URLs (comma-separated)</Label>
+                  <Input name="images" defaultValue={editing?.images?.join(', ')} placeholder="https://..., https://..." />
+                </div>
+                <div className="space-y-2 col-span-2">
+                  <Label>Tags (comma-separated)</Label>
+                  <Input name="tags" defaultValue={editing?.tags?.join(', ')} placeholder="Adventure, Family, Budget" />
                 </div>
                 <div className="space-y-2 col-span-2">
                   <Label>Description</Label>
@@ -114,15 +130,21 @@ export default function ManagePackages() {
 
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input placeholder="Search packages..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+        <Input placeholder="Search packages or tags..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filtered.map((pkg, i) => (
           <motion.div key={pkg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            className="bg-card rounded-xl border border-border/50 shadow-card overflow-hidden hover:shadow-card-hover transition-shadow">
-            <div className="h-40 overflow-hidden">
-              <img src={pkg.image} alt={pkg.title} className="w-full h-full object-cover" />
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className={`bg-card rounded-xl border border-border/50 shadow-card overflow-hidden transition-shadow ${!pkg.visible ? 'opacity-60' : ''}`}>
+            <div className="h-40 overflow-hidden relative">
+              <img src={pkg.images[0]} alt={pkg.title} className="w-full h-full object-cover" />
+              {!pkg.visible && (
+                <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center">
+                  <span className="text-primary-foreground text-sm font-medium bg-foreground/60 px-3 py-1 rounded-full">Hidden</span>
+                </div>
+              )}
             </div>
             <div className="p-5 space-y-3">
               <div className="flex items-start justify-between">
@@ -130,7 +152,12 @@ export default function ManagePackages() {
                   <h3 className="font-semibold text-card-foreground">{pkg.title}</h3>
                   <p className="text-xs text-muted-foreground">{pkg.destination}</p>
                 </div>
-                <span className="text-lg font-bold text-primary">${pkg.price}</span>
+                <span className="text-lg font-display font-bold text-primary">${pkg.price}</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {pkg.tags.map(tag => (
+                  <span key={tag} className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tag}</span>
+                ))}
               </div>
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span>{pkg.duration} days</span>
@@ -141,6 +168,10 @@ export default function ManagePackages() {
                 <Button size="sm" variant="outline" className="flex-1 gap-1"
                   onClick={() => { setEditing(pkg); setDialogOpen(true); }}>
                   <Pencil className="w-3 h-3" /> Edit
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => toggleVisibility(pkg.id)}
+                  className="gap-1">
+                  {pkg.visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                 </Button>
                 <Button size="sm" variant="outline" className="text-destructive hover:bg-destructive/10"
                   onClick={() => handleDelete(pkg.id)}>

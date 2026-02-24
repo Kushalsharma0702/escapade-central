@@ -23,12 +23,13 @@ export default function StatCard({ title, value, icon: Icon, trend, trendUp, var
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
       className="bg-card rounded-xl border border-border/50 p-6 shadow-card hover:shadow-card-hover transition-shadow"
     >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground font-medium">{title}</p>
-          <p className="text-2xl font-bold text-card-foreground mt-1">{value}</p>
+          <p className="text-2xl font-display font-bold text-card-foreground mt-1">{value}</p>
           {trend && (
             <p className={cn('text-xs mt-1 font-medium', trendUp ? 'text-success' : 'text-destructive')}>
               {trend}

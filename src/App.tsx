@@ -13,6 +13,7 @@ import ManagePackages from "./pages/admin/ManagePackages";
 import ManageBookings from "./pages/admin/ManageBookings";
 import ManageUsers from "./pages/admin/ManageUsers";
 import ManageDestinations from "./pages/admin/ManageDestinations";
+import ManageRoutes from "./pages/admin/ManageRoutes";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import BrowsePackages from "./pages/client/BrowsePackages";
 import MyBookings from "./pages/client/MyBookings";
@@ -38,6 +39,7 @@ const AppRoutes = () => (
     <Route path="/admin/bookings" element={<ProtectedRoute role="admin"><ManageBookings /></ProtectedRoute>} />
     <Route path="/admin/users" element={<ProtectedRoute role="admin"><ManageUsers /></ProtectedRoute>} />
     <Route path="/admin/destinations" element={<ProtectedRoute role="admin"><ManageDestinations /></ProtectedRoute>} />
+    <Route path="/admin/routes" element={<ProtectedRoute role="admin"><ManageRoutes /></ProtectedRoute>} />
 
     {/* Client Routes */}
     <Route path="/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
