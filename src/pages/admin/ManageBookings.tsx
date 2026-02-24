@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { bookings as initialBookings, Booking } from '@/data/mockData';
+import { bookings as initialBookings, Booking, formatINR } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import StatusBadge from '@/components/StatusBadge';
 import { Check, X, Search } from 'lucide-react';
@@ -24,7 +24,7 @@ export default function ManageBookings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">Manage Bookings</h1>
         <p className="text-sm text-muted-foreground mt-1">Approve or reject client booking requests</p>
@@ -41,35 +41,40 @@ export default function ManageBookings() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border/50">
-                {['Client', 'Package', 'Travelers', 'Travel Date', 'Amount', 'Status', 'Payment', 'Actions'].map(h => (
-                  <th key={h} className="text-left text-xs font-medium text-muted-foreground px-6 py-3">{h}</th>
-                ))}
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">Client</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">Package</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3 hidden sm:table-cell">Travelers</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3 hidden md:table-cell">Travel Date</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">Amount</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">Status</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3 hidden sm:table-cell">Payment</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(b => (
                 <motion.tr key={b.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   className="border-t border-border/30 hover:bg-muted/30 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <p className="text-sm font-medium text-card-foreground">{b.clientName}</p>
-                    <p className="text-xs text-muted-foreground">{b.clientEmail}</p>
+                    <p className="text-xs text-muted-foreground hidden sm:block">{b.clientEmail}</p>
                   </td>
-                  <td className="px-6 py-4 text-sm text-card-foreground">{b.packageName}</td>
-                  <td className="px-6 py-4 text-sm text-card-foreground">{b.travelers}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{b.travelDate}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-card-foreground">${b.totalAmount.toLocaleString()}</td>
-                  <td className="px-6 py-4"><StatusBadge status={b.status} /></td>
-                  <td className="px-6 py-4"><StatusBadge status={b.paymentStatus} /></td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4 text-sm text-card-foreground">{b.packageName}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm text-card-foreground hidden sm:table-cell">{b.travelers}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm text-muted-foreground hidden md:table-cell">{b.travelDate}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm font-medium text-card-foreground">{formatINR(b.totalAmount)}</td>
+                  <td className="px-4 sm:px-6 py-4"><StatusBadge status={b.status} /></td>
+                  <td className="px-4 sm:px-6 py-4 hidden sm:table-cell"><StatusBadge status={b.paymentStatus} /></td>
+                  <td className="px-4 sm:px-6 py-4">
                     {b.status === 'pending' && (
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" className="h-8 text-success hover:bg-success/10 gap-1"
                           onClick={() => updateStatus(b.id, 'approved')}>
-                          <Check className="w-3 h-3" /> Approve
+                          <Check className="w-3 h-3" /> <span className="hidden sm:inline">Approve</span>
                         </Button>
                         <Button size="sm" variant="outline" className="h-8 text-destructive hover:bg-destructive/10 gap-1"
                           onClick={() => updateStatus(b.id, 'rejected')}>
-                          <X className="w-3 h-3" /> Reject
+                          <X className="w-3 h-3" /> <span className="hidden sm:inline">Reject</span>
                         </Button>
                       </div>
                     )}

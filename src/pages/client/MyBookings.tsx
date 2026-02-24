@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { bookings as initialBookings } from '@/data/mockData';
+import { bookings as initialBookings, formatINR } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import StatusBadge from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
@@ -28,16 +28,16 @@ export default function MyBookings() {
       {list.map((b, i) => (
         <motion.div key={b.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
           whileHover={{ y: -1, transition: { duration: 0.2 } }}
-          className="bg-card rounded-xl border border-border/50 shadow-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          className="bg-card rounded-xl border border-border/50 shadow-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="space-y-1">
-            <h3 className="font-semibold text-card-foreground">{b.packageName}</h3>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <h3 className="font-semibold text-card-foreground text-sm sm:text-base">{b.packageName}</h3>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
               <span>📅 {b.travelDate}</span>
               <span>👥 {b.travelers} travelers</span>
-              <span className="font-display font-bold text-primary">💰 ${b.totalAmount.toLocaleString()}</span>
+              <span className="font-display font-bold text-primary">💰 {formatINR(b.totalAmount)}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <StatusBadge status={b.status} />
             <StatusBadge status={b.paymentStatus} />
             {b.status === 'pending' && (
@@ -51,7 +51,7 @@ export default function MyBookings() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div>
         <h1 className="text-2xl font-display font-bold text-foreground">My Bookings</h1>
         <p className="text-sm text-muted-foreground mt-1">Track and manage your travel bookings</p>
