@@ -18,7 +18,7 @@ export default function ClientDashboard() {
         <p className="text-muted-foreground text-sm mt-1">Here's your travel overview</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard title="Total Bookings" value={myBookings.length} icon={CalendarDays} variant="primary" />
         <StatCard title="Upcoming Trips" value={upcoming.length} icon={Plane} variant="accent" />
         <StatCard title="Pending" value={pending.length} icon={Clock} variant="warning" />
@@ -62,19 +62,24 @@ export default function ClientDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border/50">
-                  {['Package', 'Date', 'Travelers', 'Amount', 'Status'].map(h => (
-                    <th key={h} className="text-left text-xs font-medium text-muted-foreground px-4 sm:px-6 py-3">{h}</th>
-                  ))}
+                  <th className="text-left text-xs font-medium text-muted-foreground px-3 sm:px-6 py-3">Package</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground px-3 sm:px-6 py-3 hidden sm:table-cell">Date</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground px-3 sm:px-6 py-3 hidden md:table-cell">Travelers</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground px-3 sm:px-6 py-3">Amount</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground px-3 sm:px-6 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {myBookings.map(b => (
                   <tr key={b.id} className="border-t border-border/30 hover:bg-muted/30 transition-colors">
-                    <td className="px-4 sm:px-6 py-4 text-sm font-medium text-card-foreground">{b.packageName}</td>
-                    <td className="px-4 sm:px-6 py-4 text-sm text-muted-foreground">{b.travelDate}</td>
-                    <td className="px-4 sm:px-6 py-4 text-sm text-card-foreground">{b.travelers}</td>
-                    <td className="px-4 sm:px-6 py-4 text-sm font-medium text-card-foreground">{formatINR(b.totalAmount)}</td>
-                    <td className="px-4 sm:px-6 py-4"><StatusBadge status={b.status} /></td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                      <p className="text-sm font-medium text-card-foreground truncate max-w-[120px] sm:max-w-none">{b.packageName}</p>
+                      <p className="text-xs text-muted-foreground sm:hidden">{b.travelDate}</p>
+                    </td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-muted-foreground hidden sm:table-cell">{b.travelDate}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-card-foreground hidden md:table-cell">{b.travelers}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm font-medium text-card-foreground">{formatINR(b.totalAmount)}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4"><StatusBadge status={b.status} /></td>
                   </tr>
                 ))}
               </tbody>
