@@ -4,8 +4,10 @@ import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
 import { bookings, monthlyBookingsData, destinationData, demoUsers, formatINR } from '@/data/mockData';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function AdminDashboard() {
+  const isMobile = useIsMobile();
   const clients = demoUsers.filter(u => u.role === 'client');
   const totalRevenue = bookings.filter(b => b.paymentStatus === 'paid').reduce((s, b) => s + b.totalAmount, 0);
   const activeTrips = bookings.filter(b => b.status === 'approved').length;
@@ -31,8 +33,8 @@ export default function AdminDashboard() {
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={monthlyBookingsData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 90%)" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" />
-              <YAxis tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" />
+              {!isMobile && <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" />}
+              <YAxis tick={{ fontSize: 12 }} stroke="hsl(220 12% 50%)" width={30} />
               <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid hsl(220 14% 90%)', fontSize: '12px' }} />
               <Line type="monotone" dataKey="bookings" stroke="hsl(239 84% 67%)" strokeWidth={2.5} dot={{ fill: 'hsl(239 84% 67%)', r: 4 }} />
             </LineChart>
